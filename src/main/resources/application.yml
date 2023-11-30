@@ -5,3 +5,7 @@ spring:
   docker:
     compose:
       file: docker-compose.yml
+
+# Log
+logging:
+  config: classpath:logback-config.xml
