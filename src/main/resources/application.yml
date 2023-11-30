@@ -1,0 +1,7 @@
+# Docker
+spring:
+  profiles:
+    active: local
+  docker:
+    compose:
+      file: docker-compose.yml
