@@ -1,0 +1,23 @@
+version: '3.2'
+
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.2
+    volumes:
+      - type: bind
+        source: ./filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+      - type: volume
+        source: monitoring-logs
+        target: /usr/share/filebeat/logs
+    command: filebeat -e
+    networks:
+      - topy-monitoring
+
+volumes:
+  monitoring-logs:
+    external: true
+
+networks:
+  topy-monitoring:
+    external: true

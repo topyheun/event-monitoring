@@ -1,0 +1,10 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /monitoring/monitoring-logs/*.log
+  fields:
+    log_type: monitoring_api_log
+
+output.logstash:
+  hosts: ['logstash:5044']
