@@ -1,0 +1,5 @@
+http.host: "0.0.0.0"
+
+monitoring.elasticsearch.hosts: [ 'http://elasticsearch:9200/' ]
+monitoring.elasticsearch.username: topy_logstash_user
+monitoring.elasticsearch.password: '38123812'
