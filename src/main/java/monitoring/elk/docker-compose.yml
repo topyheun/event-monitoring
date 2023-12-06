@@ -43,6 +43,20 @@ services:
     depends_on:
       - elasticsearch
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.2
+    volumes:
+      - type: bind
+        source: ./kibana/config/kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+        read_only: true
+    ports:
+      - "5601:5601"
+    networks:
+      - topy-monitoring
+    depends_on:
+      - elasticsearch
+
 networks:
   topy-monitoring:
     external: true
