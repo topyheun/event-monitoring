@@ -21,6 +21,28 @@ services:
     networks:
       - topy-monitoring
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.8.2
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bi가nd
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "5044:5044/tcp"
+      - "5044:5044/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - topy-monitoring
+    depends_on:
+      - elasticsearch
+
 networks:
   topy-monitoring:
     external: true
