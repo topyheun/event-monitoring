@@ -2,7 +2,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /monitoring/monitoring-logs/*.log
+    - /usr/share/filebeat/logs/*.log
   fields:
     log_type: monitoring_api_log
 
