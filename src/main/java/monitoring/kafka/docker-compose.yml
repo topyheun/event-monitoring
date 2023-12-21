@@ -1,0 +1,105 @@
+version: '3.8'
+
+networks:
+  kafka_network:
+
+volumes:
+  kafka-broker01-data:
+  kafka-controller01-data:
+  kafka-controller02-data:
+  kafka-controller03-data:
+
+services:
+  KafkaUi:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - '8080:8080'
+    depends_on:
+      - KafkaBroker01
+      - KafkaController01
+      - KafkaController02
+      - KafkaController03
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=Local-Kraft-Cluster
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=KafkaBroker01:9092,KafkaController01:19092,KafkaController02:29092,KafkaController03:39092
+      - DYNAMIC_CONFIG_ENABLED=true
+      - KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED=true
+      - KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED=true
+    networks:
+      - kafka_network
+
+  KafkaBroker01:
+    image: confluentinc/cp-kafka:7.4.3
+    ports:
+      - "9092:9092"
+    user: root
+    environment:
+      CLUSTER_ID: ckjPoprWQzOf0-FuNkGfFQ
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_NODE_ID: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://KafkaBroker01:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@KafkaController01:19092,5@KafkaController02:29092,6@KafkaController03:39092
+      KAFKA_LOG_DIRS: /tmp/kraft-logs
+    volumes:
+      - kafka-broker01-data:/tmp/kraft-logs
+    networks:
+      - kafka_network
+
+  KafkaController01:
+    image: confluentinc/cp-kafka:7.4.3
+    ports:
+      - "19092:19092"
+    user: root
+    environment:
+      CLUSTER_ID: ckjPoprWQzOf0-FuNkGfFQ
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_NODE_ID: 4
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: CONTROLLER://KafkaController01:19092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@KafkaController01:19092,5@KafkaController02:29092,6@KafkaController03:39092
+      KAFKA_LOG_DIRS: /tmp/kraft-logs
+    volumes:
+      - kafka-controller01-data:/tmp/kraft-logs
+    networks:
+      - kafka_network
+
+  KafkaController02:
+    image: confluentinc/cp-kafka:7.4.3
+    ports:
+      - "29092:29092"
+    user: root
+    environment:
+      CLUSTER_ID: ckjPoprWQzOf0-FuNkGfFQ
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_NODE_ID: 5
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: CONTROLLER://KafkaController02:29092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@KafkaController01:19092,5@KafkaController02:29092,6@KafkaController03:39092
+      KAFKA_LOG_DIRS: /tmp/kraft-logs
+    volumes:
+      - kafka-controller02-data:/tmp/kraft-logs
+    networks:
+      - kafka_network
+
+  KafkaController03:
+    image: confluentinc/cp-kafka:7.4.3
+    ports:
+      - "39092:39092"
+    user: root
+    environment:
+      CLUSTER_ID: ckjPoprWQzOf0-FuNkGfFQ
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_NODE_ID: 6
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: CONTROLLER://KafkaController03:39092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@KafkaController01:19092,5@KafkaController02:29092,6@KafkaController03:39092
+      KAFKA_LOG_DIRS: /tmp/kraft-logs
+    volumes:
+      - kafka-controller03-data:/tmp/kraft-logs
+    networks:
+      - kafka_network
