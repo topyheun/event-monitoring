@@ -1,4 +1,11 @@
-version: '3.2'
+version: '3.8'
+
+networks:
+  monitoring_network:
+    external: true
+
+volumes:
+  elasticsearch:
 
 services:
   elasticsearch:
@@ -19,7 +26,7 @@ services:
       ELASTIC_PASSWORD: "38123812"
       discovery.type: single-node
     networks:
-      - topy-monitoring
+      - monitoring_network
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.8.2
@@ -39,7 +46,7 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-      - topy-monitoring
+      - monitoring_network
     depends_on:
       - elasticsearch
 
@@ -53,13 +60,6 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - topy-monitoring
+      - monitoring_network
     depends_on:
       - elasticsearch
-
-networks:
-  topy-monitoring:
-    external: true
-
-volumes:
-  elasticsearch:

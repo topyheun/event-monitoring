@@ -1,15 +1,15 @@
 version: '3.8'
 
+volumes:
+  api-logs:
+    external: true
+
 services:
-  topy-monitoring:
-    image: monitoring:1.0
+  api-service:
+    image: api:1.0
     ports:
       - "8080:8080"
     volumes:
       - type: volume
-        source: monitoring-logs
-        target: /monitoring/monitoring-logs
-
-volumes:
-  monitoring-logs:
-    external: true
+        source: api-logs
+        target: /api/api-logs

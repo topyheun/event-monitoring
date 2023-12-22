@@ -4,7 +4,7 @@ filebeat.inputs:
   paths:
     - /usr/share/filebeat/logs/*.log
   fields:
-    log_type: monitoring_api_log
+    log_type: api_log
 
 output.logstash:
   hosts: ['logstash:5044']

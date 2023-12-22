@@ -1,4 +1,4 @@
-package monitoring.monitoring_api.dto;
+package project.api.dto;
 
 import lombok.Data;
 

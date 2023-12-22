@@ -1,4 +1,12 @@
-version: '3.2'
+version: '3.8'
+
+networks:
+  monitoring_network:
+    external: true
+
+volumes:
+  api-logs:
+    external: true
 
 services:
   filebeat:
@@ -8,16 +16,8 @@ services:
         source: ./filebeat.yml
         target: /usr/share/filebeat/filebeat.yml
       - type: volume
-        source: monitoring-logs
+        source: api-logs
         target: /usr/share/filebeat/logs
     command: filebeat -e
     networks:
-      - topy-monitoring
-
-volumes:
-  monitoring-logs:
-    external: true
-
-networks:
-  topy-monitoring:
-    external: true
+      - monitoring_network

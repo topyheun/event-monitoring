@@ -1,6 +1,6 @@
-package monitoring.monitoring_api;
+package project.api;
 
-import monitoring.monitoring_api.dto.EventRequest;
+import project.api.dto.EventRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

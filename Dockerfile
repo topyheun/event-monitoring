@@ -1,6 +1,6 @@
 FROM openjdk:17
 
-RUN mkdir -p /monitoring
-WORKDIR /monitoring
-COPY ./build/libs/*.jar /monitoring/app.jar
-CMD ["java", "-jar", "/monitoring/app.jar"]
+RUN mkdir -p /project
+WORKDIR /project
+COPY ./build/libs/*.jar /project/app.jar
+CMD ["java", "-jar", "/project/app.jar"]
