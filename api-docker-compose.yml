@@ -12,4 +12,4 @@ services:
     volumes:
       - type: volume
         source: api-logs
-        target: /api/api-logs
+        target: /project/api-logs
