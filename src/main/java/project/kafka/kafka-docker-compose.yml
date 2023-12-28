@@ -13,7 +13,7 @@ services:
   KafkaUi:
     image: provectuslabs/kafka-ui:latest
     ports:
-      - '7070:7070'
+      - '8080:8080'
     depends_on:
       - KafkaBroker01
       - KafkaController01

@@ -1,4 +1,6 @@
-# Docker
+server:
+  port: 7070
+
 spring:
   profiles:
     active: local
