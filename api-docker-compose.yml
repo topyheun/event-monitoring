@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  api_network:
+    external: true
+
 volumes:
   api-logs:
     external: true
@@ -13,3 +17,5 @@ services:
       - type: volume
         source: api-logs
         target: /project/api-logs
+    networks:
+      - api_network

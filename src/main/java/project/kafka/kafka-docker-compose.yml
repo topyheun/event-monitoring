@@ -1,7 +1,8 @@
 version: '3.8'
 
 networks:
-  kafka_network:
+  api_network:
+    external: true
 
 volumes:
   kafka-broker01-data:
@@ -26,7 +27,7 @@ services:
       - KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED=true
       - KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED=true
     networks:
-      - kafka_network
+      - api_network
 
   KafkaBroker01:
     image: confluentinc/cp-kafka:7.4.3
@@ -48,7 +49,7 @@ services:
     volumes:
       - kafka-broker01-data:/tmp/kraft-logs
     networks:
-      - kafka_network
+      - api_network
 
   KafkaController01:
     image: confluentinc/cp-kafka:7.4.3
@@ -66,7 +67,7 @@ services:
     volumes:
       - kafka-controller01-data:/tmp/kraft-logs
     networks:
-      - kafka_network
+      - api_network
 
   KafkaController02:
     image: confluentinc/cp-kafka:7.4.3
@@ -84,7 +85,7 @@ services:
     volumes:
       - kafka-controller02-data:/tmp/kraft-logs
     networks:
-      - kafka_network
+      - api_network
 
   KafkaController03:
     image: confluentinc/cp-kafka:7.4.3
@@ -102,4 +103,4 @@ services:
     volumes:
       - kafka-controller03-data:/tmp/kraft-logs
     networks:
-      - kafka_network
+      - api_network
