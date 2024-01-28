@@ -1,5 +1,5 @@
 http.host: "0.0.0.0"
 
 monitoring.elasticsearch.hosts: [ 'http://elasticsearch:9200/' ]
-monitoring.elasticsearch.username: {logstash user id}
-monitoring.elasticsearch.password: {logstash user pwd}
+monitoring.elasticsearch.username: '{your logstash id}'
+monitoring.elasticsearch.password: '{your logstash password}'
