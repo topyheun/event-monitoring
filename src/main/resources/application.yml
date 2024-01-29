@@ -1,5 +1,6 @@
 server:
   port: 7070
+  shutdown: graceful
 
 spring:
   profiles:
@@ -22,3 +23,5 @@ spring:
 # Log
 logging:
   config: classpath:logback-config.xml
+  level:
+    root: info
