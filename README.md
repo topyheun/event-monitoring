@@ -22,7 +22,7 @@ Elastic Stack은 Elastic 회사에서 개발한 오픈 소스 소프트웨어 �
 - X-Pack 보안 기능을 사용하여 Elastic Stack의 구성요소들을 인증과 인가를 통해 계정으로 관리
 - Elasticsearch 버전 8.0부터 X-Pack 보안 기능의 기본 설정값 true로 변경
 
-### 1.2 ELK Stack Flow
+### 1.2 Elastic Stack Flow
 
 ```mermaid
 sequenceDiagram
@@ -42,137 +42,63 @@ sequenceDiagram
     note right of kibana: 로그 데이터 시각화 및 대시보드 제공
 ```    
 
-### 1.3 ELK Stack 실행 방법
-
-<details>
-<summary><b><i><u> [ ELK Stack 실행 절차 ] </u></i></b></summary>
-<div markdown="1">
+### 1.3 ELK 실행 방법
 
 #### Step 01
 
 ```shell
-git clone [프로젝트 URL]
-cd [클론한 프로젝트 폴더]
+# elasticsearch 실행
+docker-compose -f elk-docker-compose.yml up -d elasticsearch
+
+# elasticsearch 계정 비밀번호 생성 (interactive: 수동 / auto: 자동)
+$ docker exec -it $(docker ps -qf "name=elk-elasticsearch") sh bin/elasticsearch-setup-passwords auto|interactive
 ```
 
 #### Step 02
 
 ```shell
-# 빌드
-./gradlew clean build
+# kibana.yml
+# Step 01에서 설정한 kibana_system 비밀번호 설정
+elasticsearch.username: 'kibana_system'
+elasticsearch.password: 'kibana_system_password'
 
-# docker image 생성
-docker build -t api:1.0 .
-
-# docker volume 생성
-docker volume create api-logs
-
-# docker network 생성
-docker network create api_network
-docker network create monitoring_network
-
-# monitoring-api 실행
-docker-compose up -d
+# kibana 실행
+docker-compose -f elk-docker-compose.yml up -d kibana
 ```
 
 #### Step 03
 
 ```shell
-# filebeat 실행
-cd src/main/java/monitoring/filebeat
-docker-compose -f filebeat-docker-compose.yml up -d
+# kibana 접속
+# Step 01에서 설정한 elastic 계정으로 로그인
+localhost:5601
+
+# logstash user, logstash role 생성
+좌측 상단 메뉴 탭 -> Management -> Security -> Users, Roles 생성
 ```
+
+<img width="90%" alt="image" src="https://github.com/ash991213/ELK/assets/41532299/8a226381-a44d-4558-a50f-a5a4344ada2d">
 
 #### Step 04
 
 ```shell
-# elasticsearch 실행
-cd src/main/java/monitoring/elk
-docker-compose -f elk-docker-compose.yml up -d elasticsearch
-```
+# Step 03에서 생성한 logstash 계정으로 설정 파일 변경
+# logstash.yml
+monitoring.elasticsearch.username: 'your_logstash_username'
+monitoring.elasticsearch.password: 'your_logstash_password'
 
-#### Step 05
+# logstash.conf
+output {
+  elasticsearch {
+    user      => 'your_logstash_username'
+    password  => 'your_logstash_password'
+  }
+}
 
-```shell
-# 실행 중인 컨테이너 조회
-docker ps
-
-# elasticsearch container 접속 
-docker exec -it [elasticsearch container ID] sh
-
-# elasticsearch 계정 설정
-# (interactive: 수동 / auto: 자동)
-$ bin/elasticsearch-setup-passwords interactive
-
-# 종료
-$ exit
-```
-
-#### Step 06
-
-```shell
-# Step5에서 설정한 kibana_system 계정으로 kibana.yml파일 수정
-
-( kibana.yml )
-elasticsearch.username: 'kibana_system'
-elasticsearch.password: '{kibana_system_password}'
-```
-
-#### Step 07
-
-```shell
-# kibana 실행
-docker-compose -f elk-docker-compose.yml up -d elasticsearch kibana
-
-# kibana 접속
-# 계정: Step5에서 설정한 elastic 계정 사용하여 로그인
-localhost:5601
-```
-
-#### Step 08
-
-```shell
-# logstash user, logstash role 생성
-메뉴 탭(좌측 상단) -> Management -> Security -> Users, Roles 생성
-
-(Role)
-Role name: {Role 이름}
-Cluster privileges: all
-Index privileges - Indices: *
-Index privileges - Privileges: all
-
-(User)
-Username: {User 이름}
-Password: {비밀번호}
-Privileges - Roles: {Role에서 설정한 Role Name 입력}
-```
-
-#### Step 09
-
-```shell
-# Step8에서 생성한 logstash 계정으로 설정 파일 변경
-
-# example
-( logstash.yml )
-monitoring.elasticsearch.username: '{your logstash id}'
-monitoring.elasticsearch.password: '{your logstash password}'
-
-( logstash.conf )
-user	=> '{your logstash id}'
-password	=> '{your logstash password}'
-```
-
-#### Step 10
-
-```shell
-# logstash 실행
+# logstash 실행 
 docker-compose -f elk-docker-compose.yml up -d logstash
 ```
 
-</div>
-</details>
-
-<br>
 <br>
 
 ## 2. Kafka Cluster
