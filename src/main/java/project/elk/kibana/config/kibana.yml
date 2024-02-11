@@ -5,4 +5,4 @@ elasticsearch.hosts: [ 'http://elasticsearch:9200/' ]
 xpack.monitoring.ui.container.elasticsearch.enabled: true
 
 elasticsearch.username: 'kibana_system'
-elasticsearch.password: '{kibana_system_password}'
+elasticsearch.password: 'kibana_system_password'
