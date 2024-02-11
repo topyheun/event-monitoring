@@ -1,15 +1,13 @@
 package project.api;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
+@Service
 @Slf4j
-public class LogController {
+public class CreateLogService {
 
-    @GetMapping("/log")
-    public void log() {
+    public void createLog() {
         log.trace("trace_log");
         log.debug("debug_log");
         log.info("info_log");
