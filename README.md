@@ -26,12 +26,12 @@ Elastic Stack은 Elastic 회사에서 개발한 오픈 소스 소프트웨어 �
 
 ```mermaid
 sequenceDiagram
-    participant api as API Server
+    participant server as Server
     participant filebeat as Filebeat
     participant logstash as Logstash
     participant elasticsearch as Elasticsearch
-    participant kibana as Kibana Dashboard
-    api ->> filebeat: 로그 생성
+    participant kibana as Kibana
+    server ->> filebeat: 로그 생성
     note right of filebeat: 로그 파일 모니터링
     filebeat ->> logstash: JSON 형식으로 로그 전송
     note right of logstash: 로그 파싱 및 가공
@@ -39,7 +39,6 @@ sequenceDiagram
     note right of elasticsearch: 로그 데이터 관리
     kibana ->> elasticsearch: 데이터 쿼리 및 집계 요청
     elasticsearch -->> kibana: 쿼리 결과 응답
-    note right of kibana: 로그 데이터 시각화 및 대시보드 제공
 ```    
 
 ### 1.3 ELK 실행 방법
