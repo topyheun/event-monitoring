@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <property name="CONSOLE_LOG_PATTERN"
-    value="%d{HH:mm:ss.SSS} %highlight(%-5level) : %msg%n"/>
-  <property name="LOG_PATH" value="./api-logs"/>
-  <property name="FILE_NAME" value="api"/>
+  <property name="LOG_PATTERN" value="%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"/>
 
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+  <property name="KAFKA_BROKER_LIST" value="kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094"/>
+  <property name="KAFKA_LOG_TOPIC_NAME" value="log"/>
+  <property name="KAFKA_SLACK_TOPIC_NAME" value="slack"/>
+
+  <appender name="Console-Appender" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
   </appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/${FILE_NAME}-json.log</file>
-    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_PATH}/${FILE_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-      <maxHistory>90</maxHistory>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
+  <appender name="Kafka-Log-Appender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+    <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>${LOG_PATTERN}</pattern>
+      </layout>
+    </encoder>
+    <topic>${KAFKA_LOG_TOPIC_NAME}</topic>
+    <producerConfig>bootstrap.servers=${KAFKA_BROKER_LIST}</producerConfig>
   </appender>
 
+  <appender name="Kafka-Slack-Appender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+    <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>${LOG_PATTERN}</pattern>
+      </layout>
+    </encoder>
+    <topic>${KAFKA_SLACK_TOPIC_NAME}</topic>
+    <producerConfig>bootstrap.servers=${KAFKA_BROKER_LIST}</producerConfig>
+  </appender>
+
+  <appender name="Async-Kafka-Log-Appender" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <appender-ref ref="Kafka-Log-Appender"/>
+  </appender>
+
+  <appender name="Async-Kafka-Slack-Appender" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <appender-ref ref="Kafka-Slack-Appender"/>
+  </appender>
+
+  <logger name="Kafka-Log-Logger" level="ERROR" additivity="false">
+    <appender-ref ref="Kafka-Log-Appender"/>
+  </logger>
+
+  <logger name="Kafka-Slack-Logger" level="INFO" additivity="false">
+    <appender-ref ref="Kafka-Slack-Appender"/>
+  </logger>
+
   <root level="INFO">
-    <appender-ref ref="FILE"/>
-    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="Console-Appender"/>
+    <appender-ref ref="File-Appender"/>
+    <appender-ref ref="Kafka-Log-Appender"/>
+    <appender-ref ref="Kafka-Slack-Logger"/>
   </root>
 </configuration>
