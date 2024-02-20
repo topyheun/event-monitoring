@@ -10,13 +10,12 @@ spring:
       file: docker-compose.yml
   kafka:
     consumer:
-      bootstrap-servers: KafkaBroker01:9092
-      group-id: notification-service-group
+      bootstrap-servers: kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      bootstrap-servers: KafkaBroker01:9092
+      bootstrap-servers: kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
