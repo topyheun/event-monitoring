@@ -9,18 +9,17 @@ spring:
     compose:
       file: docker-compose.yml
   kafka:
+    bootstrap-servers: kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094
     consumer:
-      bootstrap-servers: kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094
+      enable-auto-commit: true
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      bootstrap-servers: kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
 
 # Log
 logging:
   config: classpath:logback-config.xml
-  level:
-    root: info
