@@ -54,7 +54,6 @@
 
   <root level="INFO">
     <appender-ref ref="Console-Appender"/>
-    <appender-ref ref="File-Appender"/>
     <appender-ref ref="Kafka-Log-Appender"/>
     <appender-ref ref="Kafka-Slack-Logger"/>
   </root>

@@ -1,11 +1,7 @@
 version: '3.8'
 
 networks:
-  api_network:
-    external: true
-
-volumes:
-  api-logs:
+  monitoring_network:
     external: true
 
 services:
@@ -13,9 +9,5 @@ services:
     image: api:1.0
     ports:
       - "7070:7070"
-    volumes:
-      - type: volume
-        source: api-logs
-        target: /project/api-logs
     networks:
-      - api_network
+      - monitoring_network

@@ -24,9 +24,10 @@ Kafka Cluster의 메타데이터는 과거에 ZooKeeper라는 외부 서비스�
 
 #### 1.2 Broker
 
-Topic을 생성할 때, Replication Factor 옵션을 3으로 설정하여 각 Partition의 고가용성을 확보하여 시스템 안정성을 보장한다.
+복제 계수(Replication Factor)를 3으로 설정함으로써, 각 파티션은 고가용성을 확보하여 시스템의 안정성을 보장합니다. 프로젝트에서는 business-logs 토픽에 이벤트를 발행할 때, `User`와 `Order`라는 두 개의 파티션 키를 사용합니다. 이는 각각의 도메인에서 발생하는 로그 정보를 분리하여, 서로 다른 Slack 채널로 전달되도록 합니다.
 
-<img width="550" alt="image" src="https://github.com/topyheun/monitoring/assets/41532299/82a99040-7d98-4345-9a5a-61d955e201cf">
+<img width="370" alt="image" src="https://github.com/topyheun/event-monitoring/assets/41532299/e902d93b-5789-42aa-b58e-7e30495c0916"> ⁃ 
+<img width="380" alt="image" src="https://github.com/topyheun/event-monitoring/assets/41532299/ffef1601-0926-4b10-b75a-0524c7966e4d">
 
 #### 1.3 Kafka Cluster 실행 방법
 
