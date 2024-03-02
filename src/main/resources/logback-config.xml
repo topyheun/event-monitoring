@@ -3,8 +3,8 @@
   <property name="LOG_PATTERN" value="%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"/>
 
   <property name="KAFKA_BROKER_LIST" value="kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094"/>
-  <property name="KAFKA_LOG_TOPIC_NAME" value="log"/>
-  <property name="KAFKA_SLACK_TOPIC_NAME" value="slack"/>
+  <property name="KAFKA_LOG_TOPIC_NAME" value="general-logs"/>
+  <property name="STRING_SERIALIZER" value="org.apache.kafka.common.serialization.StringSerializer"/>
 
   <appender name="Console-Appender" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -20,16 +20,8 @@
     </encoder>
     <topic>${KAFKA_LOG_TOPIC_NAME}</topic>
     <producerConfig>bootstrap.servers=${KAFKA_BROKER_LIST}</producerConfig>
-  </appender>
-
-  <appender name="Kafka-Slack-Appender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
-    <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
-      <layout class="ch.qos.logback.classic.PatternLayout">
-        <pattern>${LOG_PATTERN}</pattern>
-      </layout>
-    </encoder>
-    <topic>${KAFKA_SLACK_TOPIC_NAME}</topic>
-    <producerConfig>bootstrap.servers=${KAFKA_BROKER_LIST}</producerConfig>
+    <producerConfig>key-serializer=${STRING_SERIALIZER}</producerConfig>
+    <producerConfig>value-serializer=${STRING_SERIALIZER}</producerConfig>
   </appender>
 
   <appender name="Async-Kafka-Log-Appender" class="ch.qos.logback.classic.AsyncAppender">
@@ -38,23 +30,13 @@
     <appender-ref ref="Kafka-Log-Appender"/>
   </appender>
 
-  <appender name="Async-Kafka-Slack-Appender" class="ch.qos.logback.classic.AsyncAppender">
-    <queueSize>500</queueSize>
-    <discardingThreshold>0</discardingThreshold>
-    <appender-ref ref="Kafka-Slack-Appender"/>
-  </appender>
-
-  <logger name="Kafka-Log-Logger" level="ERROR" additivity="false">
+  <logger name="Kafka-Log-Logger" level="INFO" additivity="false">
     <appender-ref ref="Kafka-Log-Appender"/>
-  </logger>
-
-  <logger name="Kafka-Slack-Logger" level="INFO" additivity="false">
-    <appender-ref ref="Kafka-Slack-Appender"/>
   </logger>
 
   <root level="INFO">
     <appender-ref ref="Console-Appender"/>
     <appender-ref ref="Kafka-Log-Appender"/>
-    <appender-ref ref="Kafka-Slack-Logger"/>
+    <appender-ref ref="Kafka-Log-Logger"/>
   </root>
 </configuration>
