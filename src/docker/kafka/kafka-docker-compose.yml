@@ -1,7 +1,7 @@
 version: '3.8'
 
 networks:
-  api_network:
+  monitoring_network:
     external: true
 
 volumes:
@@ -28,7 +28,7 @@ services:
       - KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED=true
       - KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED=true
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-broker-01:
     image: confluentinc/cp-kafka:7.4.3
@@ -44,14 +44,14 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT, CONTROLLER:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka-broker-01:9092
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONTROLLER_QUORUM_VOTERS: 4@kafka-controller-01:19092,5@kafka-controller-02:29092,6@kafka-controller-03:39092
       KAFKA_LOG_DIRS: /tmp/kafka-broker-logs
     volumes:
       - kafka-broker-01-data:/tmp/kafka-broker-logs
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-broker-02:
     image: confluentinc/cp-kafka:7.4.3
@@ -67,14 +67,14 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT, CONTROLLER:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka-broker-02:9093
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONTROLLER_QUORUM_VOTERS: 4@kafka-controller-01:19092,5@kafka-controller-02:29092,6@kafka-controller-03:39092
       KAFKA_LOG_DIRS: /tmp/kafka-broker-logs
     volumes:
       - kafka-broker-02-data:/tmp/kafka-broker-logs
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-broker-03:
     image: confluentinc/cp-kafka:7.4.3
@@ -90,14 +90,14 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT, CONTROLLER:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka-broker-03:9094
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONTROLLER_QUORUM_VOTERS: 4@kafka-controller-01:19092,5@kafka-controller-02:29092,6@kafka-controller-03:39092
       KAFKA_LOG_DIRS: /tmp/kafka-broker-logs
     volumes:
       - kafka-broker-03-data:/tmp/kafka-broker-logs
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-controller-01:
     image: confluentinc/cp-kafka:7.4.3
@@ -115,7 +115,7 @@ services:
     volumes:
       - kafka-controller-01-data:/tmp/kafka-controller-logs
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-controller-02:
     image: confluentinc/cp-kafka:7.4.3
@@ -133,7 +133,7 @@ services:
     volumes:
       - kafka-controller-02-data:/tmp/kafka-controller-logs
     networks:
-      - api_network
+      - monitoring_network
 
   kafka-controller-03:
     image: confluentinc/cp-kafka:7.4.3
@@ -151,4 +151,4 @@ services:
     volumes:
       - kafka-controller-03-data:/tmp/kafka-controller-logs
     networks:
-      - api_network
+      - monitoring_network
