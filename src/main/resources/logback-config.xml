@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <property name="LOG_PATTERN" value="%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"/>
+  <property name="LOG_PATTERN" value="%d{ISO8601} [%thread] %-5level %logger{36} - %msg"/>
 
   <property name="KAFKA_BROKER_LIST" value="kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094"/>
   <property name="KAFKA_LOG_TOPIC_NAME" value="general-logs"/>
