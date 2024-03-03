@@ -129,4 +129,4 @@ docker-compose -f elk-docker-compose.yml up -d logstash
 
 ### 2.4 Elasticsearch Document 필드 구조
 
-<img width="550" alt="image" src="https://github.com/topyheun/event-monitoring/assets/41532299/582fc6b4-51d3-4140-ae77-2f17867aeceb">
+<img width="550" alt="image" src="https://github.com/topyheun/event-monitoring/assets/41532299/2c54ed0b-a833-4504-9720-877285aea4e1">
