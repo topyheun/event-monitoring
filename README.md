@@ -65,7 +65,7 @@ sequenceDiagram
     elasticsearch -->> kibana: 결과 응답
 ```
 
-### 1.3 ELK 실행 방법
+### 2.3 ELK 실행 방법
 
 <details>
   <summary><b><i><ins>How to start ELK</ins></i></b></summary>
@@ -127,6 +127,6 @@ docker-compose -f elk-docker-compose.yml up -d logstash
 
 </details>
 
-## 결과
+### 2.4 Elasticsearch Document 필드 구조
 
-- todo
+<img width="550" alt="image" src="https://github.com/topyheun/event-monitoring/assets/41532299/582fc6b4-51d3-4140-ae77-2f17867aeceb">
