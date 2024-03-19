@@ -114,10 +114,30 @@ monitoring.elasticsearch.username: 'your_logstash_username'
 monitoring.elasticsearch.password: 'your_logstash_password'
 
 # logstash.conf
+input {
+  kafka {
+    bootstrap_servers => "kafka-broker-01:9092, kafka-broker-02:9093, kafka-broker-03:9094"
+    group_id => "general-log-event-consumer"
+    topics => "general-logs"
+    consumer_threads => 1
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "%{TIMESTAMP_ISO8601:log_timestamp} \[%{DATA:thread}\] %{LOGLEVEL:log_level}  %{DATA:logger} - %{GREEDYDATA:log_message}" }
+  }
+  mutate {
+    remove_field => [ "log_timestamp", "message", "@version" ]
+  }
+}
+
 output {
   elasticsearch {
-    user      => 'your_logstash_username'
-    password  => 'your_logstash_password'
+    hosts 	=> [ 'http://elasticsearch:9200' ]
+    user	=> 'your_logstash_username'
+    password	=> 'your_logstash_password'
+    index 	=> '%{[@metadata][beat]}-%{[@metadata][version]}'
   }
 }
 
